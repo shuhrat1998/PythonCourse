@@ -9,44 +9,129 @@ class Portfolio():
         self.cash = 0.0
         self.stocks = []
         self.mfunds = []
+        self.bonds = []
         self.log = ["Transactions:"]
+        
     def addCash(self, cash):
-        self.cash += cash
-        transaction = "%.2f$ are added to the portfolio." % cash
-        self.log.append("%d. " % len(self.log) + transaction)
-        print(transaction)
+        """ Adds cash to the portfolio. """
+        
+        try:
+            if cash >= 0:
+                self.cash += cash
+                
+                # printing and saving transaction for the audit log
+                transaction = "%.2f$ are added to the portfolio." % cash
+                self.log.append("%d. " % len(self.log) + transaction)
+                print(transaction)
+                
+            else: print("Wrong input!")
+        except: print("Wrong input!")
+        
     def withdrawCash(self, cash):
-        self.cash -= cash
-        transaction = "%.2f$ are withdrawn from the portfolio." % cash
-        self.log.append("%d. " % len(self.log) + transaction)
-        print(transaction)
-    def buyStock(self, shares, symbol):
-        pass
-    def buyMutualFund(self, shares, symbol):
-        pass
+        """ Withdraws cash from the portfolio. """
+        
+        try:
+            if cash >= 0:
+                self.cash -= cash
+                
+                # printing and saving transaction for the audit log
+                transaction = "%.2f$ are withdrawn from the portfolio." % cash
+                self.log.append("%d. " % len(self.log) + transaction)
+                print(transaction)
+                
+            else: print("Wrong input!")
+        except: print("Wrong input!")
+        
+    def buyStock(self, shares, stock):
+        """ Buys a stock given its variable and the number of shares. """
+        
+        cost = stock.price * shares
+        if cost <= self.cash:
+            self.cash -= cost
+            self.stocks.append(stock)
+            stock.quantity += shares
+            
+            # printing and saving transaction for the audit log
+            transaction = "%.2f$ are used to buy %d shares of %s stock." % (cost, shares, stock.symbol)
+            self.log.append("%d. " % len(self.log) + transaction)
+            print(transaction)
+                
+        else:
+            print("There is no enough cash for this transaction!")
+
+    def buyMutualFund(self, shares, mfund):
+        """ Buys a mutual fund given its variable and the number of shares. """
+        
+        cost = 1 * shares
+        if cost <= self.cash:
+            self.cash -= cost
+            self.stocks.append(mfund)
+            mfund.quantity += shares
+            
+            # printing and saving transaction for the audit log
+            transaction = "%.2f$ are used to buy %.2f shares of %s mutual fund." % (cost, shares, mfund.symbol)
+            self.log.append("%d. " % len(self.log) + transaction)
+            print(transaction)
+            
+        else:
+            print("There is no enough cash for this transaction!")
+
+    def buyBond(self, shares, bond):
+        """ Buys a bond given its variable and the number of shares. """
+        
+        cost = bond.price * shares
+        if cost <= self.cash:
+            self.cash -= cost
+            self.bonds.append(bond)
+            bond.quantity += shares
+            
+            # printing and saving transaction for the audit log
+            transaction = "%.2f$ are used to buy %.2f shares of %s mutual fund." % (cost, shares, bond.symbol)
+            self.log.append("%d. " % len(self.log) + transaction)
+            print(transaction)
+
+        else:
+            print("There is no enough cash for this transaction!")
+
     def sellMutualFund(self, symbol, shares):
         pass
     def sellStock(self, symbol, shares):
         pass
-
+    def sellBond(self, symbol, shares):
+        pass
+    
     def history(self):
         print("\n".join(self.log))
     def __str__(self):
         return "%s" %self.firstname
+    def __repr__(self):
+        return self.__str__()
 
+# a common class for stock, mfund, and bond used for the inheritance
 class FinInstrument(object):
     def __init__(self, price, symbol):
         self.symbol = symbol
         self.price = price
+        self.quantity = 0
+        
 class Stock(FinInstrument):
-    pass
+    def __init__(self, price, symbol):
+        super().__init__(price, symbol)
+        print("A stock with price %.2f$ and symbol %s is created." % (price, symbol))
+        
 class MutualFund(FinInstrument):
     def __init__(self, symbol):
         super().__init__(1, symbol)
+        self.quantity = 0.0
+        print("A mutual fund with symbol %s is created." % symbol)
+        
 class Bond(FinInstrument):
-    pass
+    def __init__(self, price, symbol):
+        super().__init__(price, symbol)
+        print("A bond with price %.2f$ and symbol %s is created." % (price, symbol))
 
 if __name__ == '__main__':
+    
     portfolio = Portfolio() #Creates a new portfolio
     portfolio.addCash(300.50) #Adds cash to the portfolio
     s = Stock(20, "HFH") #Create Stock with price 20 and symbol "HFH"
@@ -56,11 +141,6 @@ if __name__ == '__main__':
     portfolio.buyMutualFund(10.3, mf1) #Buys 10.3 shares of "BRT"
     portfolio.buyMutualFund(2, mf2) #Buys 2 shares of "GHT"
     print(portfolio) #Prints portfolio
-    #cash: $140.50
-    #stock: 5 HFH
-    #1
-    #mutual funds: 10.33 BRT
-     #2 GHT
     portfolio.sellMutualFund("BRT", 3) #Sells 3 shares of BRT
     portfolio.sellStock("HFH", 1) #Sells 1 share of HFH
     portfolio.withdrawCash(50) #Removes $50
