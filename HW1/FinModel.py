@@ -60,7 +60,6 @@ class Portfolio():
             
     def sellStock(self, symbol, shares):
         """ Sells a stock given its symbol and the number of shares (>0). """
-        
         for stock in self.stocks:
             # no stocks with same symbols is assumed
             if stock.symbol == symbol:
@@ -81,8 +80,8 @@ class Portfolio():
                 else:
                     print("The maximum available amount of shares is exceeded!")                
                 break
-            elif stock == self.stocks[-1]:
-                print("This stock is not in the portfolio!")
+        else:
+            print("This stock is not in the portfolio!")
 
     def buyMutualFund(self, shares, mfund):
         """ Buys a mutual fund given its variable and the number of shares (>0). """
@@ -119,13 +118,15 @@ class Portfolio():
                     self.log.append("%d. " % len(self.log) + transaction)
                     print(transaction)
                     
-                    if mfund.quantity == 0.00:
+                    # rounding the number of shares for mutual fund
+                    if round(mfund.quantity, 2) == 0.00:
+                        mfund.quantity = 0
                         self.mfunds.remove(mfund)
                 else:
                     print("The maximum available amount of shares is exceeded!")                
                 break
-            elif mfund == self.mfunds[-1]:
-                print("This mutual fund is not in the portfolio!")
+        else:
+            print("This mutual fund is not in the portfolio!")
                 
     def buyBond(self, shares, bond):
         """ Buys a bond given its variable and the number of shares (>0). """
@@ -167,8 +168,8 @@ class Portfolio():
                 else:
                     print("The maximum available amount of shares is exceeded!")                
                 break
-            elif bond == self.bonds[-1]:
-                print("This bond is not in the portfolio!")
+        else:
+            print("This bond is not in the portfolio!")
     
     def history(self):
         """ Prints the list of transactions (audit log) of the portfolio. """
@@ -258,9 +259,9 @@ if __name__ == '__main__':
         #additional commands for bonds:
         b = Bond(10, "STD") #Creates Bond with price 10 and symbol "STD"
         portfolio.buyBond(10, b) #Buys 10 shares of bond b
-        print(portfolio) #Prints portfolio
+        print(portfolio)
         portfolio.sellBond("STD", 5) #Sells 5 shares of STD
-        portfolio.history() #Prints a list of all transactions ordered by time
+        portfolio.history()
         
         #commands checking whether eveything except cash clears from the balance:
         portfolio.sellStock("HFH", 4)
@@ -273,6 +274,14 @@ if __name__ == '__main__':
         print(portfolio)
         portfolio.history()
         
+        #commands checking some error messages
+        u = Bond(10, "QWE")
+        portfolio.buyBond(30, u)
+        portfolio.sellBond("QWR", 40)
+        portfolio.sellStock("RTY", 20)
+        print(portfolio)
+        portfolio.history()
+
     except:
         print("Wrong input!")
     
