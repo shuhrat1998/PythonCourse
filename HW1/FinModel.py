@@ -14,33 +14,29 @@ class Portfolio():
         
     def addCash(self, cash):
         """ Adds cash to the portfolio. """
-        
-        try:
-            if cash >= 0:
-                self.cash += cash
-                
-                # printing and saving transaction for the audit log
-                transaction = "%.2f$ are added to the portfolio." % cash
-                self.log.append("%d. " % len(self.log) + transaction)
-                print(transaction)
-                
-            else: print("Wrong input!")
-        except: print("Wrong input!")
-        
+
+        if cash >= 0:
+            self.cash += cash
+            
+            # printing and saving transaction for the audit log
+            transaction = "%.2f$ are added to the portfolio." % cash
+            self.log.append("%d. " % len(self.log) + transaction)
+            print(transaction)
+
+        else: print("Wrong input!")
+
     def withdrawCash(self, cash):
         """ Withdraws cash from the portfolio. """
         
-        try:
-            if cash >= 0:
-                self.cash -= cash
+        if cash >= 0:
+            self.cash -= cash
                 
-                # printing and saving transaction for the audit log
-                transaction = "%.2f$ are withdrawn from the portfolio." % cash
-                self.log.append("%d. " % len(self.log) + transaction)
-                print(transaction)
+            # printing and saving transaction for the audit log
+            transaction = "%.2f$ are withdrawn from the portfolio." % cash
+            self.log.append("%d. " % len(self.log) + transaction)
+            print(transaction)
                 
-            else: print("Wrong input!")
-        except: print("Wrong input!")
+        else: print("Wrong input!")
         
     def buyStock(self, shares, stock):
         """ Buys a stock given its variable and the number of shares. """
@@ -94,7 +90,20 @@ class Portfolio():
             print("There is no enough cash for this transaction!")
 
     def sellMutualFund(self, symbol, shares):
-        pass
+        for mfund in self.mfunds:
+            # no mutual funds with same symbols is assumed
+            if mfund.symbol == symbol:
+                if shares <= mfund.quantity:
+                    gain = 1 * shares
+                    self.cash += gain
+                    mfund.quantity -= shares
+                    ...
+                else:
+                    print("The maximum available amount of shares is exceeded!")                
+                break
+            elif mfund == self.mfunds[-1]:
+                print("This mutual fund does not exist!")
+
     def sellStock(self, symbol, shares):
         pass
     def sellBond(self, symbol, shares):
@@ -132,17 +141,21 @@ class Bond(FinInstrument):
 
 if __name__ == '__main__':
     
-    portfolio = Portfolio() #Creates a new portfolio
-    portfolio.addCash(300.50) #Adds cash to the portfolio
-    s = Stock(20, "HFH") #Create Stock with price 20 and symbol "HFH"
-    portfolio.buyStock(5, s) #Buys 5 shares of stock s
-    mf1 = MutualFund("BRT") #Create MF with symbol "BRT"
-    mf2 = MutualFund("GHT") #Create MF with symbol "GHT"
-    portfolio.buyMutualFund(10.3, mf1) #Buys 10.3 shares of "BRT"
-    portfolio.buyMutualFund(2, mf2) #Buys 2 shares of "GHT"
-    print(portfolio) #Prints portfolio
-    portfolio.sellMutualFund("BRT", 3) #Sells 3 shares of BRT
-    portfolio.sellStock("HFH", 1) #Sells 1 share of HFH
-    portfolio.withdrawCash(50) #Removes $50
-    portfolio.history() #Prints a list of all transactions ordered by time
+    try:
+        portfolio = Portfolio() #Creates a new portfolio
+        portfolio.addCash(300.50) #Adds cash to the portfolio
+        s = Stock(20, "HFH") #Create Stock with price 20 and symbol "HFH"
+        portfolio.buyStock(5, s) #Buys 5 shares of stock s
+        mf1 = MutualFund("BRT") #Create MF with symbol "BRT"
+        mf2 = MutualFund("GHT") #Create MF with symbol "GHT"
+        portfolio.buyMutualFund(10.3, mf1) #Buys 10.3 shares of "BRT"
+        portfolio.buyMutualFund(2, mf2) #Buys 2 shares of "GHT"
+        print(portfolio) #Prints portfolio
+        portfolio.sellMutualFund("BRT", 3) #Sells 3 shares of BRT
+        portfolio.sellStock("HFH", 1) #Sells 1 share of HFH
+        portfolio.withdrawCash(50) #Removes $50
+        portfolio.history() #Prints a list of all transactions ordered by time
+    except:
+        print("Wrong input!")
     
+# The end.
