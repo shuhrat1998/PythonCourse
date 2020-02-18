@@ -3,6 +3,7 @@ INTL 550 - HW1
 Name : Shukhrat Khuseynov
 ID   : 0070495
 """
+
 from random import uniform
 
 class Portfolio():
@@ -26,6 +27,7 @@ class Portfolio():
             print(transaction)
 
         else: print("Wrong input!")
+        
     def withdrawCash(self, cash):
         """ Withdraws cash from the portfolio. """
         
@@ -40,7 +42,7 @@ class Portfolio():
         else: print("Wrong input!")
         
     def buyStock(self, shares, stock):
-        """ Buys a stock given its variable and the number of shares. """
+        """ Buys a stock given its variable and the number of shares (>0). """
         
         cost = stock.price * shares
         if cost <= self.cash:
@@ -55,7 +57,10 @@ class Portfolio():
                 
         else:
             print("There is no enough cash for this transaction!")
+            
     def sellStock(self, symbol, shares):
+        """ Sells a stock given its symbol and the number of shares (>0). """
+        
         for stock in self.stocks:
             # no stocks with same symbols is assumed
             if stock.symbol == symbol:
@@ -80,7 +85,7 @@ class Portfolio():
                 print("This stock is not in the portfolio!")
 
     def buyMutualFund(self, shares, mfund):
-        """ Buys a mutual fund given its variable and the number of shares. """
+        """ Buys a mutual fund given its variable and the number of shares (>0). """
         
         cost = 1 * shares
         if cost <= self.cash:
@@ -95,7 +100,10 @@ class Portfolio():
             
         else:
             print("There is no enough cash for this transaction!")
+            
     def sellMutualFund(self, symbol, shares):
+        """ Sells a mutual fund given its symbol and the number of shares (>0). """
+        
         for mfund in self.mfunds:
             # no mutual funds with same symbols is assumed
             if mfund.symbol == symbol:
@@ -120,7 +128,7 @@ class Portfolio():
                 print("This mutual fund is not in the portfolio!")
                 
     def buyBond(self, shares, bond):
-        """ Buys a bond given its variable and the number of shares. """
+        """ Buys a bond given its variable and the number of shares (>0). """
         
         cost = bond.price * shares
         if cost <= self.cash:
@@ -135,7 +143,10 @@ class Portfolio():
 
         else:
             print("There is no enough cash for this transaction!")
+            
     def sellBond(self, symbol, shares):
+        """ Sells a bond given its symbol and the number of shares (>0). """
+        
         for bond in self.bonds:
             # no bonds with same symbols is assumed
             if bond.symbol == symbol:
@@ -160,8 +171,13 @@ class Portfolio():
                 print("This bond is not in the portfolio!")
     
     def history(self):
+        """ Prints the list of transactions (audit log) of the portfolio. """
+        
         print("\n".join(self.log))
+        
     def __str__(self):
+        """ Prints the balance of the portfolio. """
+        
         balance = "Portfolio.\n* cash: $%.2f" % self.cash + "\n"
         if len(self.stocks) != 0:
             balance += "-> stock(s):\n"
@@ -176,7 +192,10 @@ class Portfolio():
             for bond in self.bonds:
                 balance += "%d %s\n" % (bond.quantity, bond.symbol)
         return "%s" %balance
+    
     def __repr__(self):
+        """ Prints the balance of the portfolio. """
+        
         return self.__str__()
 
 # a common class for stock, mfund, and bond used for the inheritance
@@ -185,53 +204,75 @@ class FinInstrument(object):
         self.symbol = symbol
         self.price = price
         self.quantity = 0
+        print("A %s with price $%.2f and symbol %s is created." % (self.type, price, symbol))
+        
     def __str__(self):
-        return ("%s %s: price = %.2f, quantity = " % (self.type, self.price) + self.quantity + ".\n")
+        """ Prints the attributes of the financial instrument used. """
+        
+        return "%s %s: price = %.2f, quantity = %d." % (self.type, self.symbol, self.price, self.quantity)
+    
     def __repr__(self):
+        """ Prints the attributes of the financial instrument used. """
+        
         return self.__str__()
         
 class Stock(FinInstrument):
     def __init__(self, price, symbol):
-        super().__init__(price, symbol)
         self.type = "stock"
-        print("A stock with price $%.2f and symbol %s is created." % (price, symbol))
+        super().__init__(price, symbol)
         
 class MutualFund(FinInstrument):
     def __init__(self, symbol):
+        self.type = "mutual fund"
         super().__init__(1, symbol)
-        self.quantity = 0.0
-        self.type = "mfund"
-        print("A mutual fund with symbol %s is created." % symbol)
-        
+    def __str__(self):
+         # rewritten to output the quantity of mfund correctly (float):
+        return "%s %s: price = %.2f, quantity = %.2f." % (self.type, self.symbol, self.price, self.quantity)
+ 
 class Bond(FinInstrument):
     def __init__(self, price, symbol):
-        super().__init__(price, symbol)
         self.type = "bond"
-        print("A bond with price $%.2f and symbol %s is created." % (price, symbol))
+        super().__init__(price, symbol)
 
 if __name__ == '__main__':
     
     try:
-        portfolio = Portfolio() #Creates a new portfolio
-        portfolio.addCash(300.50) #Adds cash to the portfolio
-        s = Stock(20, "HFH") #Create Stock with price 20 and symbol "HFH"
-        portfolio.buyStock(5, s) #Buys 5 shares of stock s
-        mf1 = MutualFund("BRT") #Create MF with symbol "BRT"
-        mf2 = MutualFund("GHT") #Create MF with symbol "GHT"
-        portfolio.buyMutualFund(10.3, mf1) #Buys 10.3 shares of "BRT"
-        portfolio.buyMutualFund(2, mf2) #Buys 2 shares of "GHT"
-        print(portfolio) #Prints portfolio
-        portfolio.sellMutualFund("BRT", 3) #Sells 3 shares of BRT
-        portfolio.sellStock("HFH", 1) #Sells 1 share of HFH
-        portfolio.withdrawCash(50) #Removes $50
-        portfolio.history() #Prints a list of all transactions ordered by time
+        #given commands from HW description:
+        portfolio = Portfolio() 
+        portfolio.addCash(300.50) 
+        s = Stock(20, "HFH") 
+        portfolio.buyStock(5, s) 
+        mf1 = MutualFund("BRT") 
+        mf2 = MutualFund("GHT") 
+        portfolio.buyMutualFund(10.3, mf1) 
+        portfolio.buyMutualFund(2, mf2)
+        print(portfolio)
+        #Given output of cash in the HW description is wrong ($140.50), I think.
+        #It has to be (300.5 - 100 - 10.3 - 2) = $188.20 here.
         
-        #additionally for bonds
-        b = Bond(10, "STD") #Create Bond with price 10 and symbol "STD"
+        portfolio.sellMutualFund("BRT", 3) 
+        portfolio.sellStock("HFH", 1) 
+        portfolio.withdrawCash(50) 
+        portfolio.history()
+        
+        #additional commands for bonds:
+        b = Bond(10, "STD") #Creates Bond with price 10 and symbol "STD"
         portfolio.buyBond(10, b) #Buys 10 shares of bond b
         print(portfolio) #Prints portfolio
         portfolio.sellBond("STD", 5) #Sells 5 shares of STD
         portfolio.history() #Prints a list of all transactions ordered by time
+        
+        #commands checking whether eveything except cash clears from the balance:
+        portfolio.sellStock("HFH", 4)
+        print(portfolio)
+        portfolio.sellBond("STD", 5)
+        print(portfolio)
+        portfolio.sellMutualFund("BRT", 7.3)
+        print(portfolio)
+        portfolio.sellMutualFund("GHT", 2)
+        print(portfolio)
+        portfolio.history()
+        
     except:
         print("Wrong input!")
     
