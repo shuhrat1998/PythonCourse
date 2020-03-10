@@ -16,6 +16,7 @@ matches3 = wb.search('school enrollment') # choosing SE.PRE.ENRR
 
 matches4 = wb.search('birth rate') # choosing SP.DYN.CBRT.IN
 
+# obtaining all indicators at once
 df = wb.download(indicator=['SP.DYN.LE00.IN', 'NY.GDP.PCAP.CD', 'SE.PRE.ENRR', 'SP.DYN.CBRT.IN'], country='TJ', start=1990, end=2020)
 
 # formatting the table
