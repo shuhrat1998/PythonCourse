@@ -9,6 +9,8 @@ import pandas as pd
 from scipy.stats import t
 
 def reg(y, x):
+    """ Linear regression function 'by hand' given y and x matrices. """
+    
     n = x.shape[0]
     k = x.shape[1] # with constant term
     
