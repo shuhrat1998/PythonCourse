@@ -152,6 +152,7 @@ B_data = {'N': len(y),
 B_fit = pystan.stan(model_code=B_model, data=B_data, iter=1000, chains=2)
 
 # Conclusion (as expected):
+
 # Comparing to the first model, I expect the second model to be highly 
 # distorted by the given informative prior of B, which should be reflected 
 # in its output. Moreover, the variance should significantly reduce.
