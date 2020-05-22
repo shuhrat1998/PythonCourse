@@ -49,7 +49,7 @@ ypredict = model.predict(Xtest)
 np.corrcoef(ytest, ypredict)
 
 from sklearn.svm import SVR
-svr = SVR(kernel='poly', C=10, gamma='auto')
+svr = SVR(kernel='linear', C=10, gamma='auto')
 svr.fit(Xtrain, ytrain)
 
 ypredict = svr.predict(Xtest)
