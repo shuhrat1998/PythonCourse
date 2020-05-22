@@ -56,7 +56,7 @@ ypredict = svr.predict(Xtest)
 np.corrcoef(ytest, ypredict)
 
 from sklearn.ensemble import RandomForestRegressor
-rf = RandomForestRegressor(n_estimators = 100)
+rf = RandomForestRegressor(random_state=0, n_estimators = 100)
 rf.fit(Xtrain, ytrain)
 
 ypredict = rf.predict(Xtest)
@@ -68,6 +68,5 @@ mlp.fit(Xtrain, ytrain)
 
 ypredict = mlp.predict(Xtest)
 np.corrcoef(ytest, ypredict)
-
 
 # The end.
